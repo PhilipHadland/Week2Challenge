@@ -1,0 +1,11 @@
+The most popular product sold on a specific date:
+
+SELECT product.productname, sales.productid, count(*) AS 'popularity', sales.dateofsales FROM product, sales WHERE sales.productid = product.productid AND dateofsales = '2020-08-18' GROUP BY dateofsales, sales.productID HAVING count(*) = (select max(r) FROM (select count(*) AS r, productid FROM sales GROUP BY dateofsales, productid) AS mytable);
+
+The most popular product sold last week:
+
+SELECT product.productname, sales.productid, count(*) AS 'popularity', week(sales.dateofsales) FROM product, sales WHERE sales.productid = product.productid AND week(dateofsales) = week(curdate())-1 GROUP BY week(dateofsales), sales.productid HAVING count(*) = (SELECT max(r) FROM (select count(*) AS r, productid FROM sales WHERE week(dateofsales) = week(curdate())-1 GROUP BY dateofsales, productid) AS mytable);
+
+The most popular product sold on a specific month:
+
+SELECT product.productname, sales.productid, count(*) AS 'popularity', month(sales.dateofsales) FROM product, sales WHERE sales.productid = product.productid AND month(dateofsales) = '04' GROUP BY month(dateofsales), sales.productid HAVING count(*) = (SELECT max(r) FROM (select count(*) AS r, productid FROM sales WHERE month(dateofsales) = '04' GROUP BY dateofsales, productID) AS mytable);
